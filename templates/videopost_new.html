@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="d-flex justify-content-center pt-5 pb-5">
+  <div class="card border-primary mb-3" style="max-width: 58rem;">
+    <div class="card-header text-center"><h2 class="p-2">Add Post</h2></div>
+
+      <form action="" method="post" enctype="multipart/form-data" class="p-4">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="add post" class="btn btn-info ml-4 rounded"/>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

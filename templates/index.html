@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="{% static 'img/hero.jpg' %}">
+        <form class="d-flex tm-search-form" action="/" method="get">
+            <input class="form-control tm-search-input" name="search" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success tm-search-btn" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="container-fluid tm-container-content tm-mt-60">
+        <div class="row mb-4">
+
+            <div class="col-9">
+                <div class="row">
+                <h2 class="col-lg-3 tm-text-primary">
+                    <a href="/"> Latest Photos</a>
+                </h2>
+                <div class="col-lg-9">
+                {% if categories %}
+                    <div class="btn-group row w-100" role="group" aria-label="Basic example">
+                        {% for category in categories %}
+                        <button type="button" class="btn btn-muted col-lg-2 col-sm-12 text-left"><a href="/?category={{category.pk}}" style="font-size: 1rem;">{{category.name}}</a></button>
+                        {% endfor %}                    
+                    </div>
+                </div>
+                {% endif %}
+                </div>
+            </div>
+
+            <div class="col-3 d-flex justify-content-end align-items-center">
+                <form action="" method="get" class="tm-text-primary">
+                    Page <input type="text" name="page" value="1" size="1" class="tm-input-paging tm-text-primary"> of {{pages.num_pages}}
+                </form>
+            </div>
+        </div>
+
+        <div class="row tm-mb-90 tm-gallery">
+            {% if postphoto %}
+            {% for post in postphoto %}
+        	<div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+                <figure class="effect-ming tm-video-item" >
+                    {% if post.photo %}
+                    <img src="{{ post.photo.url }}" alt="Image" class="img-fluid">
+                    {% endif %}
+                    <figcaption class="d-flex align-items-center justify-content-center">
+                        <h2>{{ post.title }}</h2>
+                        <a href="{% url 'photo-detail' post.pk %}">View more</a>
+                    </figcaption>                    
+                </figure>
+                <div class="d-flex justify-content-between tm-text-gray">
+                    <span class="tm-text-gray-light">{{ post.date }}</span>
+                    <span>{{post.author}}</span>
+                </div>
+                <div class="d-flex justify-content-between tm-text-gray">
+                    <strong class="text-secondary"><i class="far fa-heart mr-2" style="font-size:20px;"></i>{{ post.number_of_likes }} likes{{ number_of_likes|pluralize }}</strong>
+                    
+                    <strong class="text-secondary"><i class=" far fa-eye"></i> {{ post.total_views }}  views</strong>
+                    
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h2>Kantent topilmadi.</h2>
+            {% endif %}
+        </div> <!-- row -->
+
+        <div class="row tm-mb-50">
+                <ul class="pagination pl-5">
+                    {% if pages.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pages.previous_page_number }}">Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="?page={{ pages.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+                    {% for i in pages.page_range %}
+                    {% if pages.number == i %}
+                        <li class="page-item active"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if pages.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pages.next_page_number }}">Next</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ pages.next_page_number }}">Next</a></li>
+                    {% endif %}
+                </ul>              
+        </div>
+    </div> <!-- container-fluid, tm-container-content -->
+{% endblock %}

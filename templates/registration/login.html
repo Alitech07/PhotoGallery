@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{%load crispy_forms_tags %} 
+
+{% block content %}
+<div class="d-flex justify-content-center p-4">
+  <div class="card border-primary mb-3" style="max-width: 28rem;">
+    <div class="card-header text-center"><h2>Login</h2></div>
+    <form action="" method="post" class="p-4">
+      {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <button type="submit" class="btn btn-info mb-4 rounded">Login</button>
+        <p>Hali royhatdan otmadingizmi?  <a href="{% url 'signup' %}">Ro'yxatdan otish</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

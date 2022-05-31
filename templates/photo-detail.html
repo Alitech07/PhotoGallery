@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="{% static 'img/hero.jpg' %}">
+       
+    </div>
+
+    <div class="container-fluid tm-container-content tm-mt-60">
+        <div class="row mb-4">
+            <h2 class="col-12 tm-text-primary">Photo title goes here</h2>
+        </div>
+        <div class="row tm-mb-90">            
+            <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
+                {%if post.photo %}
+                <img src="{{ post.photo.url }}" alt="Image" class="img-fluid">
+                {% endif %}
+                <div>
+                    <h2>{{post.title}}</h2>
+                    <p>{{post.body}}</p>
+                </div>
+                {% if user.is_authenticated %}
+                <div>
+                    <a href="{% url 'post_edit' post.pk %}" class="btn btn-info mt-4 mr-4">Edit</a>
+                    <a href="{% url 'post_delete' post.pk %}" class="btn btn-info mt-4 ml-4">Delete</a>
+                </div>
+                {% endif %}
+
+                <div class="mt-4">
+                {% if user.is_authenticated %}
+                <form action="{% url 'postphoto_like' post.pk %}" method="post" style="display:inline">
+                    {% csrf_token %}
+                    {% if postphoto_is_liked %}
+                    <label for="1"><i class="fas fa-heart" style="font-size:20px; color:red; cursor: pointer;"></i></label>
+                    <input type="submit" id="1" name="postphoto_id" value="{{ post.pk }}" style="display: none;"></input>
+                    {% else %}
+                    <label for="2"><i class="far fa-heart" style="font-size:20px; cursor: pointer;"></i></label>
+                    <input type="submit" id="2" name="postphoto_id" value="{{ post.pk }}" style="display: none;"></input>
+                    {% endif %}
+                </form>
+                {% endif %}
+
+                <strong class="text-secondary mr-4">{{ post.number_of_likes }} likes{{ number_of_likes|pluralize }}</strong>
+                
+                <strong class="text-secondary ml-4"><i class="far fa-eye"></i> {{ post.total_views }}  views</strong>
+                </div>
+
+                    
+                    <ul class="list-group mt-4">
+                        <li class="list-group-item active"><b>Comments</b></li>
+                        <div class="media border p-3" style="overflow: auto; height: 200px;">
+                            {% if post.comments.all %}
+                                {% for comment in post.comments.all %}
+                                <div class="d-flex">
+                                    <!-- <img src="img_avatar3.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;"> -->
+                                <i class="fas fa-user-circle" style="font-size: 2rem;"></i>
+                                <div class="media-body ml-4">
+                                
+                                    <h4>{{comment.author}} <small><i> {{comment.date|date:"Y-m-d H:i:s"}}</i></small></h4>
+                                    <p>{{comment}}</p>
+                                </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                            <h4>No comments...</h4>
+                            {% endif %}
+                          </div>
+
+                          {% if user.is_authenticated %}
+                          <li class="list-group-item">
+                          <form method="post" action="{% url 'comments' post.pk %}" class="d-flex">
+                              {% csrf_token %}
+
+                              <textarea name="comment" type="text" id="" cols="100" rows="2" class="border border-light" style="outline: none;"></textarea>
+                              <button type="submit" class="btn btn-primary"><i class="fab fa-telegram-plane"></i></button>
+                          </form>
+                        </li>
+                          {% endif %}
+                    </ul>
+                 
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+                <div class="tm-bg-gray tm-video-details">
+                    <p class="mb-4">
+                        Please support us by making <a href="https://paypal.me/templatemo" target="_parent" rel="sponsored">a PayPal donation</a>. Nam ex nibh, efficitur eget libero ut, placerat aliquet justo. Cras nec varius leo.
+                    </p>
+                    <div class="text-center mb-5">
+                        <a href="#" class="btn btn-primary tm-btn-big">Download</a>
+                    </div>                    
+                    <div class="mb-4 d-flex flex-wrap">
+                        <div class="mr-4 mb-2">
+                            <span class="tm-text-gray-dark">Dimension: </span><span class="tm-text-primary">1920x1080</span>
+                        </div>
+                        <div class="mr-4 mb-2">
+                            <span class="tm-text-gray-dark">Format: </span><span class="tm-text-primary">JPG</span>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="tm-text-gray-dark mb-3">License</h3>
+                        <p>Free for both personal and commercial use. No need to pay anything. No need to make any attribution.</p>
+                    </div>
+                    <div>
+                        <h3 class="tm-text-gray-dark mb-3">Tags</h3>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Cloud</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Bluesky</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Nature</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Background</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Timelapse</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Night</a>
+                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Real Estate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- container-fluid, tm-container-content -->
+ 
+{% endblock %}
